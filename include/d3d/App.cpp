@@ -1,4 +1,5 @@
 #include "App.h"
+#include <string.h>
 
 namespace byhj
 {

@@ -4,10 +4,6 @@
 #include <string>
 #define WIN32_LEAN_AND_MEAN
 
-#if defined(DEBUG) || defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#endif
 
 #include <WindowsX.h>
 #include <windows.h>
@@ -25,7 +21,6 @@
 #include <fstream>
 #include <vector>
 
-#include "d3dDebug.h"
 
 namespace byhj
 {
