@@ -13,7 +13,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "d3dMesh.h"
+#include "Mesh.h"
 
 int TextureFromFile(const char* path, std::string directory);
 

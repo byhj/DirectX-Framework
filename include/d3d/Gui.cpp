@@ -7,8 +7,7 @@ namespace byhj
 		void Gui::Init(ID3D11Device *pD3D11Device)
 		{
 			TwInit(TW_DIRECT3D11, pD3D11Device);
-			// Send event message to AntTweakBar
-			if (TwEventWin(wnd, message, wParam, lParam))
+			TwBar *bar = TwNewBar("Test");
 
 		}
 

@@ -22,6 +22,8 @@
 #include <vector>
 
 
+#include <AntTweakBar.h>
+
 namespace byhj
 {
 

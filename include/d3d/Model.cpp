@@ -1,4 +1,4 @@
-#include "d3dModel.h"
+#include "Model.h"
 
 
 void D3DModel::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)

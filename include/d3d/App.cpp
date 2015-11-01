@@ -1,5 +1,5 @@
 #include "App.h"
-#include <string.h>
+//#include <string.h>
 
 namespace byhj
 {
@@ -74,7 +74,7 @@ bool App::init_window()
 
 	if (!RegisterClassEx(&wc))
 	{
-		MessageBox(NULL, L"Registering Class Failded",	L"Error", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, L"Registering Class Failed",	L"Error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
@@ -108,6 +108,9 @@ bool App::init_window()
 
 LRESULT CALLBACK App::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	
+	TwEventWin(hWnd, uMsg, wParam, lParam);
+	/*
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
@@ -135,7 +138,8 @@ LRESULT CALLBACK App::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}
 	} 
-
+	*/
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

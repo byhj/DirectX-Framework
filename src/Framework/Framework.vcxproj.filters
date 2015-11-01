@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{25ea1314-e22a-4fa1-8723-eb8fc49561c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GuI">
+      <UniqueIdentifier>{1fa0f649-c5bf-45b4-b1c4-27120c6c5254}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\d3d\Timer.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Utility.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Camera.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Cubemap.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Debug.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Gui.h">
+      <Filter>GuI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Shader.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\include\d3d\Timer.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Utility.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Camera.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Gui.cpp">
+      <Filter>GuI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Shader.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
