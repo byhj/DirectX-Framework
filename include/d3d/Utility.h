@@ -2,14 +2,15 @@
 #define D3DUTILITY_H
 
 #include <windows.h>
-#include <xnamath.h>
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 namespace byhj
 {
 
 namespace d3d
 {
-
 
 struct MatrixBuffer
 {
@@ -19,6 +20,11 @@ struct MatrixBuffer
 };
 
 }
+
+
+#define ReleaseCOM(x) { if(x) { x->Release(); x = 0; } }
+
+#define SafeDelete(x) { delete x; x = 0; }
 
 }
 

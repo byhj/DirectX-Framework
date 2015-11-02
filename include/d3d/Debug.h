@@ -1,7 +1,7 @@
-#ifndef D3DDEBUG_H
-#define D3DDEBUG_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
-#include <dxerr.h>
+#include <assert.h>
 
 
 #ifndef DebugHR()
@@ -10,7 +10,7 @@
     HRESULT result = hr;                                             \
 	if(FAILED(result))                                               \
 	{                                                                \
-		DXTrace(__FILE__, (DWORD)__LINE__, result, L"Error", true);  \
+		assert(__FILE__, (DWORD)__LINE__, result, L"Error", true);  \
 	}                                                                \
 	}
 #endif

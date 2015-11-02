@@ -19,7 +19,8 @@ void RenderSystem::v_Init()
 
 	init_device();
 	init_camera(); 
-	myGui.Init(m_pD3D11Device);
+
+	myGui.Init(m_pD3D11Device, m_ScreenWidth, m_ScreenHeight);
 	m_Triangle.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd() );
 
 }
@@ -32,6 +33,7 @@ void RenderSystem::v_Update()
 void RenderSystem::v_Render()
 {
 	BeginScene();
+
 	myGui.Render();
 
 	m_Triangle.Render(m_pD3D11DeviceContext, m_Matrix);
@@ -48,7 +50,7 @@ void RenderSystem::v_Shutdown()
 	ReleaseCOM(m_pD3D11Device);
 	ReleaseCOM(m_pD3D11DeviceContext);
 	ReleaseCOM(m_pRenderTargetView);
-	myGui.Shutdown();
+	//myGui.Shutdown();
 }
 
 void RenderSystem::init_device()

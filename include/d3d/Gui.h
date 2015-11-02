@@ -13,7 +13,7 @@ namespace byhj
 		public:
 			Gui() = default;
 			~Gui() = default;
-			void Init(ID3D11Device *pD3d11Device);
+			void Init(ID3D11Device *pD3D11Device, int sw, int sh);
 			void Update();
 			void Render();
 			void Shutdown();
