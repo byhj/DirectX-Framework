@@ -6,9 +6,10 @@
 #endif 
 
 #include <d3d11.h>
-#include <xnamath.h>
-#include <D3DX10math.h>
+#include <DirectXmath.h>
 #include <vector>
+
+using namespace DirectX;
 
 namespace byhj
 {

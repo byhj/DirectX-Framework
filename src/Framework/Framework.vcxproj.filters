@@ -18,9 +18,6 @@
     <ClInclude Include="..\..\include\d3d\Camera.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Cubemap.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\d3d\Debug.h">
       <Filter>Main</Filter>
     </ClInclude>
