@@ -9,6 +9,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Triangle", "src\Triangle\Tr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cube", "src\Cube\Cube.vcxproj", "{77563DE5-AC8C-4FB7-BA65-7525A356B821}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Finished", "Finished", "{07514A8C-3FA2-418F-9E70-EB1232575276}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{2DEF998D-A507-481C-AC00-1557D7B4F106}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Planning", "Planning", "{BD14F36B-87F4-4FB5-9B45-3F97C60C132F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Working", "Working", "{69C6591B-C548-4F9C-ADDC-0B529C7D200F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -40,5 +48,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F2C01297-763B-4658-852F-9F800387B37F} = {2DEF998D-A507-481C-AC00-1557D7B4F106}
+		{2C31487B-F33D-40DA-84B3-35438C769C95} = {07514A8C-3FA2-418F-9E70-EB1232575276}
+		{77563DE5-AC8C-4FB7-BA65-7525A356B821} = {07514A8C-3FA2-418F-9E70-EB1232575276}
 	EndGlobalSection
 EndGlobal
