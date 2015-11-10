@@ -9,39 +9,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\d3d\Timer.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Utility.h">
-      <Filter>Main</Filter>
+    <ClInclude Include="..\..\include\d3d\Gui.h">
+      <Filter>GuI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Camera.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Debug.h">
+    <ClInclude Include="..\..\include\d3d\Font.h">
       <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Gui.h">
-      <Filter>GuI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Shader.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Timer.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\App.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\d3d\Timer.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\d3d\Utility.cpp">
-      <Filter>Main</Filter>
+    <ClCompile Include="..\..\include\d3d\Gui.cpp">
+      <Filter>GuI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\d3d\Camera.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\d3d\Gui.cpp">
-      <Filter>GuI</Filter>
+    <ClCompile Include="..\..\include\d3d\Font.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\d3d\Shader.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Timer.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\App.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>

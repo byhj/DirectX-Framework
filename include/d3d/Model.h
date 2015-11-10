@@ -1,6 +1,7 @@
 #ifndef D3DMODEL_H
 #define D3DMODEL_H
 
+#pragma  comment(lib, "assimp.lib")
 // Std. Includes
 #include <string>
 #include <fstream>
@@ -17,20 +18,25 @@
 
 int TextureFromFile(const char* path, std::string directory);
 
-class D3DModel
+namespace byhj
+{
+namespace d3d
+{
+
+
+class Model
 {
 public:
-	D3DModel(){}
 
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX model, XMMATRIX view, XMMATRIX proj)
+	void Render(ID3D11DeviceContext *pD3D11DeviceContext, XMFLOAT4X4 model, XMFLOAT4X4 view, XMFLOAT4X4 proj)
 	{
 		ModelShader.use(pD3D11DeviceContext);
 
-		pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState );
-
+		pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState);
+		
 		for (int i = 0; i < this->meshes.size(); i++)
 		{
-			   float blendFactor[] = {0.4f, 0.4f, 0.4f, 0.3f};
+		   float blendFactor[] = {0.4f, 0.4f, 0.4f, 0.3f};
 		   if (this->meshes[i].mat.ambient.w < 1.0f)
 			 pD3D11DeviceContext->OMSetBlendState(Transparency, blendFactor, 0xffffffff);
 		   //"fine-tune" the blending equation
@@ -52,7 +58,7 @@ public:
 	void processNode(aiNode* node, const aiScene* scene);
 
 	//Processes a mesh and return the data information
-	D3DMesh processMesh(aiMesh* mesh, const aiScene* scene);
+	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 	
 	//Load the texture for material
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
@@ -60,21 +66,51 @@ public:
 	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
 	ID3D11ShaderResourceView * TextureFromFile(const char* path, std::string directory);
 
+	std::vector<XMFLOAT3>  GetPos()
+	{
+		return vPos;
+	}
+	std::vector<unsigned long> GetIndex()
+	{
+		return vIndex;
+	}
+	std::vector<XMFLOAT3>  GetVertexData()
+	{
+		return vPos;
+	}
+	std::vector<unsigned long> GetIndexData()
+	{
+		return vIndex;
+	}
+	int GetIndexCount()
+	{
+		return vIndex.size();
+	}
+	int GetVertexCount()
+	{
+		return vPos.size();
+	}
 private:
 
 	//One model may include many meshes
-	std::vector<D3DMesh> meshes;
+	std::vector<Mesh> meshes;
 	std::string directory;
 	std::vector<Texture> textures_loaded;	
-
-	ID3D11Device *pD3D11Device;
-	ID3D11DeviceContext *pD3D11DeviceContext; 
-	ID3D11ShaderResourceView *m_pTexture;
 	HWND hWnd;
 	Shader ModelShader;
-	ID3D11SamplerState   *m_pTexSamplerState;
-	ID3D11Buffer *m_pMatBuffer;
-	ID3D11BlendState* Transparency;
+
+	ID3D11Device *             pD3D11Device;
+	ID3D11DeviceContext *      pD3D11DeviceContext;
+	ID3D11ShaderResourceView * m_pTexture;
+	ID3D11SamplerState *       m_pTexSamplerState;
+	ID3D11Buffer *             m_pMatBuffer;
+	ID3D11BlendState *         Transparency;
+
+	std::vector<XMFLOAT3> vPos;
+	std::vector<unsigned long> vIndex;	
 };
 
+}
+
+}
 #endif

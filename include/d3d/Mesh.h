@@ -1,17 +1,15 @@
 #ifndef D3DMESH_H
 #define D3DMESH_H
 
-#ifdef _WIN32
-#define _XM_NO_INTRINSICS_
-#endif 
-
+#include "d3d/Shader.h"
+#include "d3d/d3dDebug.h"
 #include <d3d11.h>
-#include <D3DX11.h>
-#include <xnamath.h>
-#include <D3DX10math.h>
+#include <windows.h>
 
-#include "d3dShader.h"
-#include "d3dDebug.h"
+#include <DirectXMath.h> 
+using namespace DirectX;
+
+
 
 // Std. Includes
 #include <string>
@@ -25,6 +23,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+
+	
 struct Vertex {
 	// Position
 	XMFLOAT3 Position;
@@ -32,6 +32,10 @@ struct Vertex {
 	XMFLOAT3 Normal;
 	// TexCoords
 	XMFLOAT2 TexCoords;
+
+	XMFLOAT3 Tangent;
+
+	XMFLOAT3 BiTangent;
 };
 
 
@@ -72,6 +76,8 @@ struct Material
 	//float shininess;
 };
 
+
+
 struct Texture {
 	Texture()
 	{
@@ -83,67 +89,73 @@ struct Texture {
 	aiString path;
 };
 
-class D3DMesh {
-public:
-	/*  Mesh Data  */
-	std::vector<Vertex> VertexData;
-	std::vector<unsigned long> IndexData;
-	std::vector<Texture> textures;
-	Material mat;
-
-	D3DMesh() {}
-	// Constructor
-	D3DMesh(std::vector<Vertex> vertices, std::vector<unsigned long> indices, std::vector<Texture> textures, Material mat,
-	        ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+namespace byhj
+{
+	namespace d3d
 	{
-		this->VertexData = vertices;
-		this->IndexData = indices;
-		this->textures = textures;
-		this->mat = mat;
-		// Now that we have all the required data, set the vertex buffers and its attribute pointers.
-		this->init_Mesh(pD3D11Device, pD3D11DeviceContext, hWnd);
+
+		class Mesh {
+		public:
+			/*  Mesh Data  */
+			std::vector<Vertex> VertexData;
+			std::vector<unsigned long> IndexData;
+			std::vector<Texture> textures;
+			Material mat;
+
+			// Constructor
+			Mesh(std::vector<Vertex> vertices, std::vector<unsigned long> indices, std::vector<Texture> textures, Material mat,
+				ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+			{
+				this->VertexData = vertices;
+				this->IndexData = indices;
+				this->textures = textures;
+				this->mat = mat;
+				// Now that we have all the required data, set the vertex buffers and its attribute pointers.
+				this->init_Mesh(pD3D11Device, pD3D11DeviceContext, hWnd);
+			}
+
+		public:
+			// Initializes all the buffer objects/arrays
+			void init_Mesh(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
+			void init_state(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
+			void init_buffer(ID3D11Device *pD3D11Device);
+			void load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile);
+			void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
+			void Render(ID3D11DeviceContext *pD3D11DeviceContext, XMFLOAT4X4 model, XMFLOAT4X4 view, XMFLOAT4X4 proj);
+
+			struct MatrixBuffer
+			{
+				XMFLOAT4X4 Model;
+				XMFLOAT4X4 View;
+				XMFLOAT4X4 Porj;
+			};
+			MatrixBuffer cbMatrix;
+
+			struct MaterialBuffer
+			{
+				XMFLOAT4 ambient;
+				XMFLOAT4 diffuse;
+				XMFLOAT4 specular;
+				XMFLOAT4 emissive;
+				float   shininess;
+			};
+
+			ID3D11Buffer *m_pIndexBuffer;
+			ID3D11Buffer *m_pVertexBuffer;
+			ID3D11Buffer *m_pMVPBuffer;
+
+			int m_VertexCount = 0;
+			int m_IndexCount = 0;
+
+			ID3D11ShaderResourceView *m_pShaderResourceView;
+			ID3D11DepthStencilView   *m_pDepthStencilView;
+			ID3D11Texture2D          *m_pDepthStencilBuffer;
+			ID3D11RasterizerState    *m_pRasterState;
+			ID3D11SamplerState       *m_pTexSamplerState;
+
+		};
+
 	}
-
-public:
-	// Initializes all the buffer objects/arrays
-	void init_Mesh(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
-	void init_state(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
-	void init_buffer(ID3D11Device *pD3D11Device);
-	void load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile);
-	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX model, XMMATRIX view, XMMATRIX proj);
-
-	struct MatrixBuffer
-	{
-		XMMATRIX  model;
-		XMMATRIX  view;
-		XMMATRIX  proj;
-	};
-	MatrixBuffer cbMatrix;
-
-	struct MaterialBuffer
-	{
-		XMFLOAT4 ambient;
-		XMFLOAT4 diffuse;
-		XMFLOAT4 specular;
-		XMFLOAT4 emissive;
-		float   shininess;
-	};
-
-	ID3D11Buffer *m_pIndexBuffer;
-	ID3D11Buffer *m_pVertexBuffer;
-	ID3D11Buffer *m_pMVPBuffer;
-
-	int m_VertexCount;
-	int m_IndexCount;
-
-	ID3D11ShaderResourceView *m_pShaderResourceView;
-	ID3D11DepthStencilView   *m_pDepthStencilView;
-	ID3D11Texture2D          *m_pDepthStencilBuffer;
-	ID3D11RasterizerState    *m_pRasterState;
-	ID3D11SamplerState       *m_pTexSamplerState;
-   
-};
-
+}
 
 #endif

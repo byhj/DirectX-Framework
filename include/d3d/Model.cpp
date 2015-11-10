@@ -1,7 +1,13 @@
 #include "Model.h"
+#include "DirectXTK/WICTextureLoader.h"
 
+namespace byhj
+{
 
-void D3DModel::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+namespace d3d
+{
+
+void Model::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 {
 	this->pD3D11Device = pD3D11Device;
 	this->pD3D11DeviceContext = pD3D11DeviceContext;
@@ -27,7 +33,7 @@ void D3DModel::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11
 	HRESULT hr;
 	// Create the texture sampler state.
 	hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	///////////////////////////////////////////////////////////////////
 	D3D11_BUFFER_DESC cbMaterialDesc;	
@@ -38,7 +44,7 @@ void D3DModel::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11
 	cbMaterialDesc.CPUAccessFlags = 0;
 	cbMaterialDesc.MiscFlags      = 0;
 	hr = pD3D11Device->CreateBuffer(&cbMaterialDesc, NULL, &m_pMatBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	D3D11_BLEND_DESC blendDesc;
 	ZeroMemory( &blendDesc, sizeof(blendDesc) );
@@ -57,44 +63,65 @@ void D3DModel::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11
 	pD3D11Device->CreateBlendState(&blendDesc, &Transparency);
 }
 
-void D3DModel::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+void Model::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
-	HRESULT hr;
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
 
-	pInputLayoutDesc[0].SemanticName         = "POSITION";
-	pInputLayoutDesc[0].SemanticIndex        = 0;
-	pInputLayoutDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc[0].InputSlot            = 0;
-	pInputLayoutDesc[0].AlignedByteOffset    = 0;
-	pInputLayoutDesc[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[0].InstanceDataStepRate = 0;
+	//Shader interface infomation
+	D3D11_INPUT_ELEMENT_DESC InputLayout;
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc;
 
-	pInputLayoutDesc[1].SemanticName         = "NORMAL";
-	pInputLayoutDesc[1].SemanticIndex        = 0;
-	pInputLayoutDesc[1].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc[1].InputSlot            = 0;
-	pInputLayoutDesc[1].AlignedByteOffset    = 12;
-	pInputLayoutDesc[1].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[1].InstanceDataStepRate = 0;
+	InputLayout.SemanticName         = "POSITION";
+	InputLayout.SemanticIndex        = 0;
+	InputLayout.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	InputLayout.InputSlot            = 0;
+	InputLayout.AlignedByteOffset    = 0;
+	InputLayout.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	InputLayout.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(InputLayout);
 
-	pInputLayoutDesc[2].SemanticName         = "TEXCOORD";
-	pInputLayoutDesc[2].SemanticIndex        = 0;
-	pInputLayoutDesc[2].Format               = DXGI_FORMAT_R32G32_FLOAT;
-	pInputLayoutDesc[2].InputSlot            = 0;
-	pInputLayoutDesc[2].AlignedByteOffset    = 24;
-	pInputLayoutDesc[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[2].InstanceDataStepRate = 0;
+	InputLayout.SemanticName         = "NORMAL";
+	InputLayout.SemanticIndex        = 0;
+	InputLayout.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	InputLayout.InputSlot            = 0;
+	InputLayout.AlignedByteOffset    = 12;
+	InputLayout.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	InputLayout.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(InputLayout);
 
-	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
+	InputLayout.SemanticName         = "TEXCOORD";
+	InputLayout.SemanticIndex        = 0;
+	InputLayout.Format               = DXGI_FORMAT_R32G32_FLOAT;
+	InputLayout.InputSlot            = 0;
+	InputLayout.AlignedByteOffset    = 24;
+	InputLayout.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	InputLayout.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(InputLayout);
 
-	ModelShader.init(pD3D11Device, hWnd);
-	ModelShader.attachVS(L"model.vsh", pInputLayoutDesc, numElements);
-	ModelShader.attachPS(L"model.psh");
+	InputLayout.SemanticName         = "TANGENT";
+	InputLayout.SemanticIndex        = 0;
+	InputLayout.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	InputLayout.InputSlot            = 0;
+	InputLayout.AlignedByteOffset    = 32;
+	InputLayout.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	InputLayout.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(InputLayout);
+
+	InputLayout.SemanticName         = "BITANGENT";
+	InputLayout.SemanticIndex        = 0;
+	InputLayout.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	InputLayout.InputSlot            = 0;
+	InputLayout.AlignedByteOffset    = 44;
+	InputLayout.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	InputLayout.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(InputLayout);
+
+	ModelShader.init(pD3D11Device, vInputLayoutDesc);
+	ModelShader.attachVS(L"model.vsh", "VS", "vs_5_0");
+	ModelShader.attachPS(L"model.psh", "PS", "ps_5_0");
 	ModelShader.end();
 }
 
-void D3DModel::loadModel(std::string path)
+void Model::loadModel(std::string path)
 {
 	// Read file via ASSIMP
 	Assimp::Importer importer;
@@ -114,7 +141,7 @@ void D3DModel::loadModel(std::string path)
 	this->processNode(scene->mRootNode, scene);
 }
 
-std::vector<Texture>  D3DModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture>  Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
 	std::vector<Texture> textures;
 	for (int i = 0; i < mat->GetTextureCount(type); i++)
@@ -160,7 +187,7 @@ void setBlend(float blend, Material &mat)
 	mat.emissive.w = blend;
 }
 
-D3DMesh D3DModel::processMesh(aiMesh* mesh, const aiScene* scene)
+Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
 	//Mesh Data to fill
 	std::vector<Vertex> vertices;
@@ -168,23 +195,28 @@ D3DMesh D3DModel::processMesh(aiMesh* mesh, const aiScene* scene)
 	std::vector<Texture> textures;
 	std::vector<Material> MaterialData;
 
+	XMVECTOR v[3];
+	XMVECTOR uv[3];
+
 	// Walk through each of the mesh's vertices
-	for (int i = 0; i < mesh->mNumVertices; i++)
+	for (int i = 0, j = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		XMFLOAT3 temp; // We declare a placeholder std::vector since assimp uses its own std::vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder XMFloat3 first.
+		XMFLOAT3 pos; // We declare a placeholder std::vector since assimp uses its own std::vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder XMFloat3 first.
+		XMFLOAT3 normal;
 
 		// Positions
-		temp.x = mesh->mVertices[i].x;
-		temp.y = mesh->mVertices[i].y;
-		temp.z = mesh->mVertices[i].z;
-		vertex.Position = temp;
+		pos.x = mesh->mVertices[i].x;
+		pos.y = mesh->mVertices[i].y;
+		pos.z = mesh->mVertices[i].z;
+		vertex.Position = pos;
+		vPos.push_back(pos);
 
 		// Normals
-		temp.x = mesh->mNormals[i].x;
-		temp.y = mesh->mNormals[i].y;
-		temp.z = mesh->mNormals[i].z;
-		vertex.Normal = temp;
+		normal.x = mesh->mNormals[i].x;
+		normal.y = mesh->mNormals[i].y;
+		normal.z = mesh->mNormals[i].z;
+		vertex.Normal = normal;
 
 		// Texture Coordinates
 		if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
@@ -201,6 +233,37 @@ D3DMesh D3DModel::processMesh(aiMesh* mesh, const aiScene* scene)
 
 		//Process one Vertex
 		vertices.push_back(vertex);
+
+		v[j]  = XMLoadFloat3(&vertex.Position);
+		uv[j] = XMLoadFloat2(&vertex.TexCoords );
+		if ( (j+1) % 3 == 0)
+		{
+			// Edges of the triangle : postion delta
+			XMVECTOR deltaPos1 = v[1]  - v[0];
+			XMVECTOR deltaPos2 = v[2]  - v[0];
+			XMVECTOR deltaUV1  = uv[1] - uv[0];
+			XMVECTOR deltaUV2  = uv[2] - uv[0];
+
+			float uv1x = XMVectorGetX(deltaUV1);
+			float uv1y = XMVectorGetY(deltaUV1);
+			float uv2x = XMVectorGetX(deltaUV2);
+			float uv2y = XMVectorGetY(deltaUV2);
+
+			float r = 1.0f / (uv1x * uv2y - uv1y * uv2x);
+			XMVECTOR tangent = (deltaPos1 * uv2y   - deltaPos2 * uv1y) * r;
+			XMVECTOR bitangent = (deltaPos2 * uv1x   - deltaPos1 * uv2x) * r;
+
+			XMStoreFloat3(&vertices[i].Tangent, tangent);
+			XMStoreFloat3(&vertices[i-1].Tangent, tangent);
+			XMStoreFloat3(&vertices[i-2].Tangent, tangent);
+
+			XMStoreFloat3(&  vertices[i].BiTangent, bitangent);
+			XMStoreFloat3(&vertices[i-1].BiTangent, bitangent);
+			XMStoreFloat3(&vertices[i-2].BiTangent, bitangent);
+			j = 0;
+		}
+		else
+			++j;
 	}
 
 	// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
@@ -209,7 +272,11 @@ D3DMesh D3DModel::processMesh(aiMesh* mesh, const aiScene* scene)
 		aiFace face = mesh->mFaces[i];
 		// Retrieve all indices of the face and store them in the indices std::vector
 		for (int j = 0; j < face.mNumIndices; j++)
+		{
 			indices.push_back(face.mIndices[j]);
+			//
+			vIndex.push_back(face.mIndices[j]);
+		}
 	}
 	Material mat;
 
@@ -258,13 +325,17 @@ D3DMesh D3DModel::processMesh(aiMesh* mesh, const aiScene* scene)
 		// 2. Specular maps
 		std::vector<Texture> specularMaps = this->loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+		// 3.normal maps
+		std::vector<Texture> normalMaps = this->loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 	}
 
 	// Return a mesh object created from the extracted mesh data
-	return D3DMesh(vertices, indices, textures, mat, pD3D11Device, pD3D11DeviceContext, hWnd);
+	return Mesh(vertices, indices, textures, mat, pD3D11Device, pD3D11DeviceContext, hWnd);
 }
 
-void D3DModel::processNode(aiNode* node, const aiScene* scene)
+void Model::processNode(aiNode* node, const aiScene* scene)
 {
 	// Process each mesh located at the current node
 	for (int i = 0; i < node->mNumMeshes; i++)
@@ -283,7 +354,7 @@ void D3DModel::processNode(aiNode* node, const aiScene* scene)
 
 }
 
-ID3D11ShaderResourceView * D3DModel::TextureFromFile(const char* path, std::string directory)
+ID3D11ShaderResourceView * Model::TextureFromFile(const char* path, std::string directory)
 {
 	//Generate texture ID and load texture data 
 	std::string filename = std::string(path);
@@ -293,7 +364,11 @@ ID3D11ShaderResourceView * D3DModel::TextureFromFile(const char* path, std::stri
 	LPCWSTR sw = stemp.c_str();
 
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, sw, NULL,NULL, &m_pTexture, NULL);
-	DebugHR(hr);
+	hr = CreateWICTextureFromFile(pD3D11Device, sw, NULL,  &m_pTexture);
+
 	return m_pTexture;
+}
+
+}
+
 }

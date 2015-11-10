@@ -10,10 +10,11 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\include\DXUT\Optional;$(SolutionDir)\include\DXUT\Core;$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_NON_CONFORMING_SWPRINTFS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;usp10.lib;dxguid.lib;winmm.lib;comctl32.lib;DXUT.lib;DXUTOpt.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D3D10_1.lib;DXGI.lib;D2D1.lib;dwrite.lib;dinput8.lib;d3d11.lib;D3DCompiler.lib;dxguid.lib;DirectXTK.lib;usp10.lib;winmm.lib;comctl32.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

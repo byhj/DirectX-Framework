@@ -1,13 +1,18 @@
-#include "d3dMesh.h"
+#include "Mesh.h"
+
+namespace byhj
+{
+namespace d3d
+{
 
 
-void D3DMesh::init_Mesh(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+void Mesh::init_Mesh(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 {
 	init_state(pD3D11Device, pD3D11DeviceContext);
 	init_buffer(pD3D11Device);
 }
 
-void D3DMesh::init_state(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+void Mesh::init_state(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
 	//////////////////////Raterizer State/////////////////////////////
@@ -17,11 +22,11 @@ void D3DMesh::init_state(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11
 	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.FrontCounterClockwise = false;
 	hr = pD3D11Device->CreateRasterizerState(&rasterDesc, &m_pRasterState);
-	DebugHR(hr);
+	//DebugHR(hr);
 }
 
 
-void D3DMesh::init_buffer(ID3D11Device *pD3D11Device)
+void Mesh::init_buffer(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
 
@@ -45,7 +50,7 @@ void D3DMesh::init_buffer(ID3D11Device *pD3D11Device)
 
 	// Now create the vertex buffer.
 	hr = pD3D11Device->CreateBuffer(&VertexBufferDesc, &VBO, &m_pVertexBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	/////////////////////////////////Index Buffer ///////////////////////////////////////
 
@@ -67,7 +72,7 @@ void D3DMesh::init_buffer(ID3D11Device *pD3D11Device)
 	IBO.SysMemSlicePitch = 0;
 
 	hr = pD3D11Device->CreateBuffer(&IndexBufferDesc, &IBO, &m_pIndexBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	///////////////////////////////////////////////////////////////////
 	D3D11_BUFFER_DESC mvpDesc;	
@@ -78,10 +83,10 @@ void D3DMesh::init_buffer(ID3D11Device *pD3D11Device)
 	mvpDesc.CPUAccessFlags = 0;
 	mvpDesc.MiscFlags      = 0;
 	hr = pD3D11Device->CreateBuffer(&mvpDesc, NULL, &m_pMVPBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 }
-void D3DMesh::Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX model, XMMATRIX view, XMMATRIX proj)
+void Mesh::Render(ID3D11DeviceContext *pD3D11DeviceContext, XMFLOAT4X4 model, XMFLOAT4X4 view, XMFLOAT4X4 proj)
 {	
 
 	// Bind appropriate textures
@@ -110,9 +115,11 @@ void D3DMesh::Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX model, X
 	offset = 0;
 	pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 	pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	cbMatrix.model = XMMatrixTranspose(model);
-	cbMatrix.view  = XMMatrixTranspose(view);
-	cbMatrix.proj  = XMMatrixTranspose(proj);
+
+	cbMatrix.Model = model;
+	cbMatrix.View  = view;
+	cbMatrix.Porj  = proj;
+
 	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0 );
 	pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, &m_pMVPBuffer);
 
@@ -120,4 +127,8 @@ void D3DMesh::Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX model, X
 
 	pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+}
+
+}
+
 }

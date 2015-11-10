@@ -65,19 +65,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\d3d\App.h" />
     <ClInclude Include="..\..\include\d3d\Camera.h" />
-    <ClInclude Include="..\..\include\d3d\Debug.h" />
+    <ClInclude Include="..\..\include\d3d\Font.h" />
     <ClInclude Include="..\..\include\d3d\Gui.h" />
     <ClInclude Include="..\..\include\d3d\Shader.h" />
     <ClInclude Include="..\..\include\d3d\Timer.h" />
-    <ClInclude Include="..\..\include\d3d\Utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\d3d\App.cpp" />
     <ClCompile Include="..\..\include\d3d\Camera.cpp" />
+    <ClCompile Include="..\..\include\d3d\Font.cpp" />
     <ClCompile Include="..\..\include\d3d\Gui.cpp" />
     <ClCompile Include="..\..\include\d3d\Shader.cpp" />
     <ClCompile Include="..\..\include\d3d\Timer.cpp" />
-    <ClCompile Include="..\..\include\d3d\Utility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

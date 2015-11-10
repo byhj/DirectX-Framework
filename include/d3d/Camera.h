@@ -1,14 +1,11 @@
-#ifndef Camera_H
-#define Camera_H
+#ifndef D3DCAMERA_H
+#define D3DCAMERA_H
 
-#ifdef _WIN32
-#define _XM_NO_INTRINSICS_
-#endif 
-
+#include <windows.h>
+#include <dinput.h>
 #include <d3d11.h>
-#include <DirectXmath.h>
-#include <vector>
 
+#include <DirectXMath.h> 
 using namespace DirectX;
 
 namespace byhj
@@ -17,56 +14,50 @@ namespace byhj
 namespace d3d
 {
 
-const float Pi = 3.1415926535f;
-
 class Camera
 {
 public:
-    Camera():m_Theta(1.5f * Pi), m_Phi(0.25f * Pi), m_Radius(15.0f)
+	Camera()
 	{
-		m_LastMousePos.x = 0;
-		m_LastMousePos.y = 0;
-		XMMATRIX I = XMMatrixIdentity();
-		XMStoreFloat4x4(&m_World,  I);
-		XMStoreFloat4x4(&m_View ,  I);
-		XMStoreFloat4x4(&m_Proj ,  I);
+		moveLeftRight   = 0.0f;
+		moveBackForward = 0.0f;
+		camYaw = 0.0f;
+		camPitch = 0.0f;
+		rot = 0.01f;
+		rightMouseClicked = false;
 	}
 
-	void update();
-	XMFLOAT4X4 GetViewMatrix() const 
-	{
-		return m_View;
-	}
-    XMFLOAT4X4 GetProjMatrix() const
-	{
-		return m_Proj;
-	}
-	XMFLOAT3 GetPos()
-	{
-		return pos;
-	}
-	void SetRadius(float r)
-	{
-		m_Radius = r;
-	}
-	void OnMouseDown(WPARAM btnState, int x, int y, HWND hWnd);
-	void OnMouseMove(WPARAM btnState, int x, int y);
-	void OnMouseUp(WPARAM btnState, int x, int y);
-	void OnMouseWheel(WPARAM btnState, int x, int y, float aspect);
+	bool Init(HINSTANCE hInstance , HWND hWnd);
+	void DetectInput(double time , HWND hWnd);
+	void UpdateCamera();
+
+	XMFLOAT4X4 GetViewMatrix();
+	XMFLOAT4   GetCamPos()	  ;
+	XMFLOAT4   GetCamTarget()  ;
+	float GetMouseX();
+	float GetMouseY();
+	bool GetRightMouseClicked();
 
 private:
+	IDirectInputDevice8* m_pDIKeyboard;
+	IDirectInputDevice8* m_pDIMouse;
+	DIMOUSESTATE mouseLastState;
+	LPDIRECTINPUT8 DirectInput;
 
-	float m_Theta;
-	float m_Phi;
-	float m_Radius;
-	POINT m_LastMousePos;
+	XMFLOAT4   m_camTarget;
+	XMFLOAT4   m_camPosition;
+	XMFLOAT4X4 m_camView;
 
-	XMFLOAT4X4 m_World;
-	XMFLOAT4X4 m_View;
-	XMFLOAT4X4 m_Proj;
-	XMFLOAT3 pos;
-	XMFLOAT3 target;
-	float m_aspect;
+	float rot;
+	float moveLeftRight  ;
+	float moveBackForward;
+
+	float camYaw   ;
+	float camPitch ;
+
+	float m_mouseX;
+	float m_mouseY;
+	bool rightMouseClicked;
 };
 
 }

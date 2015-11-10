@@ -16,28 +16,28 @@ void RTT::init_window(float posX, float posY, float width, float height, float a
 	m_aspect = aspect;
 }
 
-void RTT::Render(ID3D11DeviceContext *pD3D11DeviceContext, ID3D11ShaderResourceView *pTexture, const XMFLOAT4X4 &Model,  
-					const XMFLOAT4X4 &View, const XMFLOAT4X4 &Proj)
+void RTT::Render(ID3D11DeviceContext *pD3D11DeviceContext, ID3D11ShaderResourceView *pTexture, const XMFLOAT4X4  &Model,
+	const XMFLOAT4X4 &View, const XMFLOAT4X4  &Proj)
 {
 
 	cbMatrix.model  = Model;
 	cbMatrix.view   = View;
 	cbMatrix.proj   = Proj;
-	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0 );
-	pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, &m_pMVPBuffer);
+	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer.Get(), 0, NULL, &cbMatrix, 0, 0 );
+	pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, m_pMVPBuffer.GetAddressOf());
 
 	unsigned int stride;
 	unsigned int offset;
 	stride = sizeof(Vertex); 
 	offset = 0;
 
-	pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-	pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	pD3D11DeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+	pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pD3D11DeviceContext->PSSetShaderResources(0, 1, &pTexture);  
-	pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState );
+	pD3D11DeviceContext->PSSetSamplers( 0, 1, m_pTexSamplerState.GetAddressOf());
 
-	RTTShader.use(pD3D11DeviceContext);
+	D3DRTTShader.use(pD3D11DeviceContext);
 	pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
 
 }
@@ -74,20 +74,20 @@ bool RTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 	VertexData[0].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);  // Top left.
 	VertexData[0].Tex = XMFLOAT2(0.0f, 0.0f);
 
-	VertexData[1].Pos = XMFLOAT3(m_posX + m_width, m_posY, 0.0f);  
+	VertexData[1].Pos = XMFLOAT3(m_posX+m_width, m_posY, 0.0f);
 	VertexData[1].Tex = XMFLOAT2(1.0f, 0.0f);
 
-	VertexData[2].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);   //Bottom right
+	VertexData[2].Pos = XMFLOAT3(m_posX+m_width, m_posY-m_height, 0.0f);   //Bottom right
 	VertexData[2].Tex = XMFLOAT2(1.0f, 1.0f);
 
-	// Second triangle.
-	VertexData[3].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);   
+		// Second triangle.	XMFLOAT
+	VertexData[3].Pos = XMFLOAT3(m_posX+m_width, m_posY-m_height, 0.0f);
 	VertexData[3].Tex = XMFLOAT2(1.0f, 1.0f);
 
-	VertexData[4].Pos = XMFLOAT3(m_posX, m_posY - m_height, 0.0f); 
+	VertexData[4].Pos = XMFLOAT3(m_posX, m_posY-m_height, 0.0f);
 	VertexData[4].Tex = XMFLOAT2(0.0f, 1.0f);
 
-	VertexData[5].Pos = XMFLOAT3(m_posX, m_posY, 0.0f); 
+	VertexData[5].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);
 	VertexData[5].Tex = XMFLOAT2(0.0f, 0.0f);
 
 
@@ -110,7 +110,7 @@ bool RTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 
 	// Now create the vertex buffer.
 	hr = pD3D11Device->CreateBuffer(&VertexBufferDesc, &VBO, &m_pVertexBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	/////////////////////////////////Index Buffer ///////////////////////////////////////
 
@@ -130,19 +130,19 @@ bool RTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 	IBO.SysMemSlicePitch = 0;
 
 	hr = pD3D11Device->CreateBuffer(&IndexBufferDesc, &IBO, &m_pIndexBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	////////////////////////////////MVP Buffer//////////////////////////////////////
 
 	D3D11_BUFFER_DESC mvpBufferDesc;	
 	ZeroMemory(&mvpBufferDesc, sizeof(D3D11_BUFFER_DESC));
 	mvpBufferDesc.Usage          = D3D11_USAGE_DEFAULT;
-	mvpBufferDesc.ByteWidth      = sizeof(d3d::MatrixBuffer);
+	mvpBufferDesc.ByteWidth      = sizeof(MatrixBuffer);
 	mvpBufferDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	mvpBufferDesc.CPUAccessFlags = 0;
 	mvpBufferDesc.MiscFlags      = 0;
 	hr = pD3D11Device->CreateBuffer(&mvpBufferDesc, NULL, &m_pMVPBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	// Create a texture sampler state description.
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -162,7 +162,7 @@ bool RTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 
 	// Create the texture sampler state.
 	hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	return true;
 }
@@ -171,35 +171,33 @@ bool RTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 bool RTT::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	HRESULT result;
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc;
+	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc;
+	pInputLayoutDesc.SemanticName = "POSITION";
+	pInputLayoutDesc.SemanticIndex = 0;
+	pInputLayoutDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	pInputLayoutDesc.InputSlot = 0;
+	pInputLayoutDesc.AlignedByteOffset = 0;
+	pInputLayoutDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[2];
-	pInputLayoutDesc[0].SemanticName = "POSITION";
-	pInputLayoutDesc[0].SemanticIndex = 0;
-	pInputLayoutDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc[0].InputSlot = 0;
-	pInputLayoutDesc[0].AlignedByteOffset = 0;
-	pInputLayoutDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[0].InstanceDataStepRate = 0;
+	pInputLayoutDesc.SemanticName = "TEXCOORD";
+	pInputLayoutDesc.SemanticIndex = 0;
+	pInputLayoutDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+	pInputLayoutDesc.InputSlot = 0;
+	pInputLayoutDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	pInputLayoutDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	pInputLayoutDesc[1].SemanticName = "TEXCOORD";
-	pInputLayoutDesc[1].SemanticIndex = 0;
-	pInputLayoutDesc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	pInputLayoutDesc[1].InputSlot = 0;
-	pInputLayoutDesc[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	pInputLayoutDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[1].InstanceDataStepRate = 0;
-
-	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
-
-	RTTShader.init(pD3D11Device, hWnd);
-	RTTShader.attachVS(L"rtt.vsh", pInputLayoutDesc, numElements);
-	RTTShader.attachPS(L"rtt.psh");
-	RTTShader.end();
+	D3DRTTShader.init(pD3D11Device, vInputLayoutDesc);
+	D3DRTTShader.attachVS(L"rtt.vsh", "VS", "vs_5_0");
+	D3DRTTShader.attachPS(L"rtt.psh", "PS", "ps_5_0");
+	D3DRTTShader.end();
 
 	return true;
 }
 
-
 }
-
 }
