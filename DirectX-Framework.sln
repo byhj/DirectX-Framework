@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Working", "Working", "{69C6
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Font", "src\Font\Font.vcxproj", "{18EDCBE3-547F-459B-98D6-C5731F7755E1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Triangle", "src\Triangle\Triangle.vcxproj", "{A2F318A0-731E-4573-92FF-489CC36CD4B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,14 @@ Global
 		{18EDCBE3-547F-459B-98D6-C5731F7755E1}.Release|Win32.Build.0 = Release|Win32
 		{18EDCBE3-547F-459B-98D6-C5731F7755E1}.Release|x64.ActiveCfg = Release|x64
 		{18EDCBE3-547F-459B-98D6-C5731F7755E1}.Release|x64.Build.0 = Release|x64
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Debug|Win32.Build.0 = Debug|Win32
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Debug|x64.ActiveCfg = Debug|x64
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Debug|x64.Build.0 = Debug|x64
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Release|Win32.ActiveCfg = Release|Win32
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Release|Win32.Build.0 = Release|Win32
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Release|x64.ActiveCfg = Release|x64
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +54,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F2C01297-763B-4658-852F-9F800387B37F} = {2DEF998D-A507-481C-AC00-1557D7B4F106}
 		{18EDCBE3-547F-459B-98D6-C5731F7755E1} = {07514A8C-3FA2-418F-9E70-EB1232575276}
+		{A2F318A0-731E-4573-92FF-489CC36CD4B7} = {69C6591B-C548-4F9C-ADDC-0B529C7D200F}
 	EndGlobalSection
 EndGlobal
