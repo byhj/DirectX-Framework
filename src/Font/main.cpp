@@ -2,9 +2,11 @@
 #pragma comment( linker, "/subsystem:\"console\" /entry:\"WinMainCRTStartup\"")
 #endif // DEBUG
 
+/*
 #ifdef _WIN32
 #define _XM_NO_INTRINSICS_
 #endif 
+*/
 
 
 #include "RenderSystem.h"
